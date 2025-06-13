@@ -1,0 +1,13 @@
+[
+  {
+    "serial": "SERIALNUM",
+    "phone": "+84984523100",
+    "address": "125 Đào Duy Từ, Quận 5",
+    "status": "create",
+    "payment_type": "visa",
+    "payment_status": "no_paid",
+    "products": [
+      "Albion_the_Branded_Dragon_C_SDAZ-EN046_STRUCTURE_DECK:_ALBAZ_STRIKE"
+    ]
+  }
+]

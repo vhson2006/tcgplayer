@@ -1,0 +1,49 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { CustomSelect } from "modules/selects";
+import { t } from "commons/languages/helper";
+import { actions } from 'commons/const/slice';
+import { FormControl, Stack, FormLabel } from "@chakra-ui/react";
+
+const TagGroupSelect = (props: any) => {
+  const { isMulti, isDisabled, value, onChange } = props;
+  const { activedLanguage } = useSelector((state: any) => state.languageReducer); 
+  const { tagGroups } = useSelector((state: any) => state.commonReducer); 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (Array.isArray(tagGroups) && tagGroups.length < 1) {
+      dispatch(actions.FETCH_TAG_GROUPS())
+    }
+  }, [])
+
+  useEffect(() => {
+    dispatch(actions.FETCH_TAG_GROUPS())
+  }, [activedLanguage]);
+ 
+  return (
+    <FormControl id='tagGroup' isInvalid={true}>
+      <Stack
+        direction={{ base: 'column', md: 'row' }}
+        spacing={{ base: '1.5', md: '8' }}
+        justify="space-between"
+      >
+        <FormLabel m={0} minW={150}>{t('input.tag-group.label')}&nbsp;<span style={{color: 'red'}}>*</span></FormLabel>  
+        <CustomSelect 
+          isDisabled={isDisabled}
+          isClearable
+          isMulti={isMulti ? isMulti : false}
+          isFloating
+          isRequired
+          name="tagGroup"
+          placeholder={t('input.tag-group.placeholder')}
+          value={value}
+          onChange={onChange}
+          options={tagGroups} 
+        />
+      </Stack>
+    </FormControl>
+  )
+}
+
+export default TagGroupSelect
