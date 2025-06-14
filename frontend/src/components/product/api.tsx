@@ -18,11 +18,22 @@ export const createOrderWithGuest = async (param: any, activedLanguage = default
   return await callJsonApi("POST", "/api/guest-order", param, activedLanguage)
 }
 
+const filterCart = (v: any) => {
+  return typeof v.id !== "undefined" 
+    && typeof v.slug !== "undefined" 
+    && typeof v.name !== "undefined" 
+    && typeof v.description !== "undefined" 
+    && typeof v.quantity !== "undefined" 
+    && typeof v.image !== "undefined" 
+    && typeof v.price !== "undefined" 
+}
 export const fetchCart = () => {
   try {
     let current = localStorage.getItem('cart');
     if (current && Array.isArray(jsonParse(current))) {
-      return jsonParse(current)
+      const newData = jsonParse(current).filter(filterCart)
+      localStorage.setItem('cart', JSON.stringify(newData));
+      return newData
     } else {
       return []
     }
@@ -37,7 +48,7 @@ export const addToCart = (param: any) => {
   try {
     let current = localStorage.getItem('cart');
     if (current && Array.isArray(jsonParse(current))) {
-      let currentArray = jsonParse(current);
+      let currentArray = jsonParse(current).filter(filterCart);
       let index = currentArray.findIndex((e: any) => e.id === param.id);
       if (index === -1) {
         localStorage.setItem('cart', JSON.stringify([ ...currentArray, param ]));
@@ -58,7 +69,7 @@ export const updateCart = (param: any) => {
   try {
     let current = localStorage.getItem('cart');
     if (current && Array.isArray(jsonParse(current))) {
-      let currentArray = jsonParse(current);
+      let currentArray = jsonParse(current).filter(filterCart);
       let index = currentArray.findIndex((e: any) => e.id === param.id);
       if (index !== -1) {
         currentArray[index].quantity = param.quantity;
@@ -75,7 +86,7 @@ export const removeItemFromCart = (id: string) => {
   try {
     let current = localStorage.getItem('cart');
     if (current && Array.isArray(jsonParse(current))) {
-      let currentArray = jsonParse(current);
+      let currentArray = jsonParse(current).filter(filterCart);
       let index = currentArray.findIndex((e: any) => e.id === id);
       if (index !== -1) {
         currentArray.splice(index, 1);
